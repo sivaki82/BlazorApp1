@@ -1,0 +1,124 @@
+@using BlazorApp1.Data
+
+<div>
+    <button class="btn btn-primary mb-2" @onclick="ShowAddPerson">Add Person</button>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Company Name</th>
+                <th>Address1</th>
+                <th>Address2</th>
+                <th>Phone Number</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in people)
+            {
+                <tr>
+                    <td>@person.Name</td>
+                    <td>@person.CompanyName</td>
+                    <td>@person.Address1</td>
+                    <td>@person.Address2</td>
+                    <td>@person.PhoneNumber</td>
+                    <td>
+                        <button class="btn btn-sm btn-secondary me-1" @onclick="() => ShowEditPerson(person)">Edit</button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => DeletePerson(person)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (showPopup)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.5)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@((editIndex == -1) ? "Add Person" : "Edit Person")</h5>
+                    <button type="button" class="btn-close" @onclick="ClosePopup"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label>Name</label>
+                        <input class="form-control" @bind="editPerson.Name" />
+                    </div>
+                    <div class="mb-2">
+                        <label>Company Name</label>
+                        <input class="form-control" @bind="editPerson.CompanyName" />
+                    </div>
+                    <div class="mb-2">
+                        <label>Address1</label>
+                        <input class="form-control" @bind="editPerson.Address1" />
+                    </div>
+                    <div class="mb-2">
+                        <label>Address2</label>
+                        <input class="form-control" @bind="editPerson.Address2" />
+                    </div>
+                    <div class="mb-2">
+                        <label>Phone Number</label>
+                        <input class="form-control" @bind="editPerson.PhoneNumber" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" @onclick="SavePerson">Save</button>
+                    <button class="btn btn-secondary" @onclick="ClosePopup">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Person> people = new();
+    private bool showPopup = false; 
+    private Person editPerson = new();
+    private int editIndex = -1;
+
+    private void ShowAddPerson()
+    {
+        editPerson = new Person();
+        editIndex = -1;
+        showPopup = true;
+    }
+
+    private void ShowEditPerson(Person person)
+    {
+        editPerson = new Person
+        {
+            Name = person.Name,
+            CompanyName = person.CompanyName,
+            Address1 = person.Address1,
+            Address2 = person.Address2,
+            PhoneNumber = person.PhoneNumber
+        };
+        editIndex = people.IndexOf(person);
+        showPopup = true;
+    }
+
+    private void SavePerson()
+    {
+        if (editIndex == -1)
+        {
+            people.Add(editPerson);
+        }
+        else
+        {
+            people[editIndex] = editPerson;
+        }
+        showPopup = false;
+    }
+
+    private void DeletePerson(Person person)
+    {
+        people.Remove(person);
+    }
+
+    private void ClosePopup()
+    {
+        showPopup = false;
+    }
+}

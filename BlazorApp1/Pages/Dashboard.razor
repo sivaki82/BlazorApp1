@@ -1,0 +1,76 @@
+@page "/"
+@layout DashboardLayout
+
+@using BlazorApp1.Data
+@inject NavigationManager NavigationManager
+
+<PageTitle>Dashboard</PageTitle>
+
+<nav class="details-top-menu mb-4">
+    <TopMenu />
+</nav>
+
+<div>
+<h1>Dashboard</h1>
+<p>Welcome to your dashboard! Add widgets, charts, or summary info here.</p>
+
+<h3>Request Records</h3>
+@if (requestRecords.Count == 0)
+{
+    <p>No request records found.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Request Number</th>
+                <th>Applicant Name</th>
+                <th>Disposition Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in requestRecords)
+            {
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" @onclick="() => NavigateToIndex()">@record.RequestNum</a>
+                    </td>
+                    <td>@record.ApplicantName</td>
+                    <td>@record.DispositionDate.ToShortDateString()</td>
+                    <td>@record.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+</div>
+@code {
+    private List<RequestRecord> requestRecords = new();
+
+    protected override void OnInitialized()
+    {
+        // Example data. Replace with your data source or service call.
+        requestRecords = new List<RequestRecord>
+        {
+            new RequestRecord { RequestNum = "REQ001", ApplicantName = "Alice", DispositionDate = DateTime.Today.AddDays(-1), Status = "Open" },
+            new RequestRecord { RequestNum = "REQ002", ApplicantName = "Bob", DispositionDate = DateTime.Today.AddDays(-2), Status = "Closed" },
+            new RequestRecord { RequestNum = "REQ003", ApplicantName = "Charlie", DispositionDate = DateTime.Today.AddDays(-3), Status = "Open" }
+        };
+    }
+
+    private void NavigateToIndex()
+    {
+        NavigationManager.NavigateTo("/index");
+    }
+}
+
+<style>
+    .dashboard-bg {
+        background-color: #e3f2fd; /* Light blue */
+        min-height: 100vh;
+        padding: 2rem;
+        border-radius: 8px;
+    }
+</style>

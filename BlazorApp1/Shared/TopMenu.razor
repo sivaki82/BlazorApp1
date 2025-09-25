@@ -1,0 +1,31 @@
+@inject NavigationManager NavigationManager
+
+<ul class="menu-list">
+    <li>
+        <a href="/profile" class="menu-link @(IsActive("/profile"))">Profile</a>
+    </li>
+    <li>
+        <a href="/applicantaccess" class="menu-link @(IsActive("/applicantaccess"))">Request Applicant Access</a>
+    </li>
+    <li>
+        <a href="/" class="menu-link @(IsActive("/"))">Dashboard</a>
+    </li>
+    <li>
+        <a href="/request-search" class="menu-link @(IsActive("/request-search"))">Search</a>
+    </li>
+    <li>
+        <a href="/" class="menu-link @(IsActive("/"))">Data Requests</a>
+    </li>
+    <li>
+        <a href="/contact" class="menu-link @(IsActive("/contact"))">Help</a>
+    </li>
+</ul>
+
+@code {
+    private string IsActive(string href)
+    {
+        var uri = NavigationManager.ToBaseRelativePath(NavigationManager.Uri).TrimEnd('/');
+        if (href == "/") return uri == "" ? "active-menu" : "";
+        return uri.StartsWith(href.TrimStart('/'), StringComparison.OrdinalIgnoreCase) ? "active-menu" : "";
+    }
+}

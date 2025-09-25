@@ -1,0 +1,59 @@
+@inherits LayoutComponentBase
+
+<PageTitle>BlazorApp1</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <nav class="details-top-menu mb-4">
+            <TopMenu />
+        </nav>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+<link href="~/css/site.css" rel="stylesheet" />
+
+
+<style>
+    .details-top-menu {
+        background: #e3f2fd;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.08);
+    }
+
+    .menu-list {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+    }
+
+    .menu-link {
+        color: #1565c0;
+        font-weight: 500;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background 0.2s, color 0.2s;
+    }
+
+        .menu-link:hover, .menu-link:focus {
+            background: #bbdefb;
+            color: #0d47a1;
+            text-decoration: none;
+        }
+
+</style>
+
+
+

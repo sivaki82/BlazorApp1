@@ -1,0 +1,58 @@
+﻿@page "/profile"
+@layout DashboardLayout
+@using BlazorApp1.Data
+
+<PageTitle>User Profile </PageTitle>
+
+<nav class="details-top-menu mb-4">
+    <TopMenu />
+</nav>
+
+<h3>User Profile</h3>
+<p>Add/edit your user information. </p>
+
+<div class="container my-4">
+    <div class="mb-3 row">
+        <label class="col-3 col-form-label">Email</label>
+        <div class="col-6">
+            <input class="form-control" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-3 col-form-label">First Name</label>
+        <div class="col-6">
+            <input class="form-control" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-3 col-form-label">Last Name</label>
+        <div class="col-6">
+            <input class="form-control" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-3 col-form-label">Address 1</label>
+        <div class="col-6">
+            <input class="form-control" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-3 col-form-label">Address 2</label>
+        <div class="col-6">
+            <input class="form-control" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-3 col-form-label">Phone</label>
+        <div class="col-6">
+            <input class="form-control" />
+        </div>
+    </div>
+    <div class="mb-3 row" style="align-content:center">
+        <button class="col-3 btn btn-primary">Search</button>
+    </div>
+</div>
+
+@code {
+
+}

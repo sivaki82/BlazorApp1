@@ -1,0 +1,20 @@
+<div class="form-group">
+    <div class="d-flex flex-column">
+        <div class="d-flex align-items-center mb-2">
+            <input type="checkbox" id="checkbox1" @bind="isChecked1" class="form-check-input" />
+            <label for="checkbox1" class="form-check-label ms-2">This is a long label for the first checkbox that is displayed inline</label>
+        </div>
+        <div class="d-flex align-items-center">
+            <input type="checkbox" id="checkbox2" @bind="isChecked2" class="form-check-input" />
+            <label for="checkbox2" class="form-check-label ms-2">This is a long label for the second checkbox that is displayed inline</label>
+        </div>
+    </div>
+
+    <textarea class="form-control mt-3" rows="4" placeholder="Enter your text here..." @bind="textValue"></textarea>
+</div>
+
+@code {
+    private bool isChecked1 = false;
+    private bool isChecked2 = false;
+    private string textValue = string.Empty;
+}

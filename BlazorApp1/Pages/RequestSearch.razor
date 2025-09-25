@@ -1,0 +1,157 @@
+@page "/request-search"
+@layout DashboardLayout
+
+@using BlazorApp1.Data
+
+<PageTitle>Request Search</PageTitle>
+
+
+<nav class="details-top-menu mb-4">
+    <TopMenu />
+</nav>
+<h3>Search Requests</h3>
+<div class="row mb-3">
+    <div class="col">
+        <input class="form-control" placeholder="Request Number" @bind="searchRequestNum" />
+    </div>
+    <div class="col">
+        <input class="form-control" placeholder="Applicant Name" @bind="searchApplicantName" />
+    </div>
+  @*   <div class="col">
+        <input class="form-control" type="date" @bind="searchDispositionDateString" />
+    </div> *@
+    <div class="col">
+        <select class="form-select" @bind="filterStatus">
+            <option value="">All Statuses</option>
+            <option value="Open">Open</option>
+            <option value="Closed">Closed</option>
+        </select>
+    </div>
+    <div class="col">
+        <button class="btn btn-primary" @onclick="Search">Search</button>
+    </div>
+</div>
+
+@if (pagedResults.Count == 0)
+{
+    <p>No results found.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Request Number</th>
+                <th>Applicant Name</th>
+                <th>Disposition Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in pagedResults)
+            {
+                <tr>
+                    <td>@record.RequestNum</td>
+                    <td>@record.ApplicantName</td>
+                    <td>@record.DispositionDate.ToShortDateString()</td>
+                    <td>@record.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                <button class="page-link" @onclick="PrevPage">Previous</button>
+            </li>
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(currentPage == i ? "active" : "")">
+                    <button class="page-link" @onclick="() => GoToPage(i)">@i</button>
+                </li>
+            }
+            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                <button class="page-link" @onclick="NextPage">Next</button>
+            </li>
+        </ul>
+    </nav>
+}
+
+@code {
+    private string searchRequestNum = "";
+    private string searchApplicantName = "";
+    private string searchDispositionDateString = "";
+    private DateTime? searchDispositionDate => 
+        DateTime.TryParse(searchDispositionDateString, out var dt) ? dt : (DateTime?)null;
+    private string filterStatus = "";
+
+    private List<RequestRecord> allResults = new();
+    private List<RequestRecord> filteredResults = new();
+    private List<RequestRecord> pagedResults = new();
+
+    private int currentPage = 1;
+    private int pageSize = 5;
+    private int totalPages = 1;
+
+    protected override void OnInitialized()
+    {
+        // Example data. Replace with API/service call as needed.
+        allResults = new List<RequestRecord>
+        {
+            new RequestRecord { RequestNum = "REQ001", ApplicantName = "Alice", DispositionDate = DateTime.Today.AddDays(-1), Status = "Open" },
+            new RequestRecord { RequestNum = "REQ002", ApplicantName = "Bob", DispositionDate = DateTime.Today.AddDays(-2), Status = "Closed" },
+            new RequestRecord { RequestNum = "REQ003", ApplicantName = "Charlie", DispositionDate = DateTime.Today.AddDays(-3), Status = "Open" },
+            // Add more sample records as needed
+        };
+        Search();
+    }
+
+    private void Search()
+    {
+        filteredResults = allResults
+            .Where(r =>
+                (string.IsNullOrWhiteSpace(searchRequestNum) || r.RequestNum.Contains(searchRequestNum, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrWhiteSpace(searchApplicantName) || r.ApplicantName.Contains(searchApplicantName, StringComparison.OrdinalIgnoreCase)) &&
+                (!searchDispositionDate.HasValue || r.DispositionDate.Date == searchDispositionDate.Value.Date) &&
+                (string.IsNullOrWhiteSpace(filterStatus) || r.Status == filterStatus)
+            )
+            .ToList();
+
+        currentPage = 1;
+        UpdatePagedResults();
+    }
+
+    private void UpdatePagedResults()
+    {
+        totalPages = (int)Math.Ceiling(filteredResults.Count / (double)pageSize);
+        pagedResults = filteredResults
+            .Skip((currentPage - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
+
+    private void PrevPage()
+    {
+        if (currentPage > 1)
+        {
+            currentPage--;
+            UpdatePagedResults();
+        }
+    }
+
+    private void NextPage()
+    {
+        if (currentPage < totalPages)
+        {
+            currentPage++;
+            UpdatePagedResults();
+        }
+    }
+
+    private void GoToPage(int page)
+    {
+        currentPage = page;
+        UpdatePagedResults();
+    }
+}
